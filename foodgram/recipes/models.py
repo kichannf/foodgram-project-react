@@ -1,5 +1,4 @@
 from django.db import models
-
 from users.models import User
 
 
@@ -32,7 +31,11 @@ class Recipe(models.Model):
         related_name='recipe',
         through='RecipeIngredient'
     )
-    tag = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(
+        Tag,
+        verbose_name='Теги',
+        related_name='recipe'
+    )
     cooking_time = models.IntegerField('Время приготовления')
 
 
