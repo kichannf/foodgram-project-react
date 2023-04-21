@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'recipes.apps.RecipesConfig',
+    'rest_framework',
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
 ]
@@ -145,12 +146,6 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
-
-ROLE_CHOICES = (
-    ('guest', 'user'),
-    ('auth', 'auth'),
-    ('admin', 'admin'),
-)
 
 
 MEDIA_URL = '/media/'

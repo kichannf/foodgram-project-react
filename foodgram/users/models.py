@@ -1,8 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from foodgram.settings import ROLE_CHOICES
-
 
 class User(AbstractUser):
     username = models.CharField(
@@ -30,12 +28,6 @@ class User(AbstractUser):
         'Фамилия',
         max_length=150,
         blank=True,
-    )
-    role = models.TextField(
-        'Роль',
-        choices=ROLE_CHOICES,
-        default='user',
-        help_text='Роль пользователя',
     )
 
     class Meta:
