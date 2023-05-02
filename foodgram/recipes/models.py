@@ -4,7 +4,7 @@ from users.models import User
 
 class Tag(models.Model):
     name = models.CharField('Название', max_length=200, unique=True)
-    tags = models.CharField('Цвет', max_length=7, unique=True)
+    color = models.CharField('Цвет', max_length=7, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
 
 
@@ -47,17 +47,37 @@ class RecipeIngredient(models.Model):
         return f'{self.recipe}{self.ingredient}'
 
 
-class Favourites(models.Model):
+class Favourite(models.Model):
     author = models.ForeignKey(
         User, verbose_name='Пользователь',
-        related_name='favourites',
+        related_name='favourite',
         on_delete=models.CASCADE)
     recipe = models.ForeignKey(
         Recipe, verbose_name='рецепт',
-        related_name='favourites',
+        related_name='favourite',
         on_delete=models.CASCADE
     )
 
 
 class Subscription(models.Model):
-    ...
+    author = models.ForeignKey(
+        User, verbose_name='Пользователь',
+        related_name='favourites',
+        on_delete=models.CASCADE)
+    recipe = models.ForeignKey(
+        Recipe, verbose_name='рецепты',
+        related_name='favourites',
+        on_delete=models.CASCADE
+    )
+
+
+class ShopingCart(models.Model):
+    author = models.ForeignKey(
+        User, verbose_name='Пользователь',
+        related_name='shoping_cart',
+        on_delete=models.CASCADE)
+    recipe = models.ForeignKey(
+        Recipe, verbose_name='Корзина',
+        related_name='shoping_cart',
+        on_delete=models.CASCADE
+    )
