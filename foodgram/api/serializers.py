@@ -87,6 +87,21 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         recipe.tags.set(tags)
         return recipe
 
+    def update(self, instance, validated_data):
+        tags = validated_data.pop('tags')
+        ingredients = validated_data.pop('ingredients')
+        recipe = super().update(instance, validated_data)
+        recipe.tags.clear()
+        recipe.ingredients.clear()
+        recipe.tags.set(tags)
+        for ingredient in ingredients:
+            RecipeIngredient.objects.get_or_create(
+                recipe=recipe,
+                amount=ingredient['amount'],
+                ingredient=ingredient['id'],
+            )
+        return recipe
+
     def to_representation(self, instance):
         request = self.context.get('request')
         context = {'request': request}
