@@ -59,26 +59,29 @@ class RecipeIngredient(models.Model):
         return f'{self.recipe}{self.ingredient}'
 
 
-class Favourite(models.Model):
+class Favorite(models.Model):
     author = models.ForeignKey(
         User, verbose_name='Пользователь',
-        related_name='favourite',
+        related_name='favorite',
         on_delete=models.CASCADE)
     recipe = models.ForeignKey(
         Recipe, verbose_name='рецепт',
-        related_name='favourite',
+        related_name='favorite',
         on_delete=models.CASCADE
     )
+
+    def __str__(self):
+        return f'{self.recipe} у {self.author} в избранном'
 
 
 class Subscription(models.Model):
     author = models.ForeignKey(
         User, verbose_name='Пользователь',
-        related_name='favourites',
+        related_name='subscription',
         on_delete=models.CASCADE)
     recipe = models.ForeignKey(
         Recipe, verbose_name='рецепты',
-        related_name='favourites',
+        related_name='subscription',
         on_delete=models.CASCADE
     )
 

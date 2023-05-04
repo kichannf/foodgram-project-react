@@ -107,3 +107,10 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         context = {'request': request}
         return RecipeSerializer(
             instance, context=context).data
+
+
+class RecipeForFavorite(serializers.ModelSerializer):
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'cooking_time')

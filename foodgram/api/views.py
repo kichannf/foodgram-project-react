@@ -1,6 +1,7 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 
-from recipes.models import Ingredient, Recipe, Tag
+from recipes.models import Favorite,Ingredient, Recipe, Tag
 from .serializers import (
     AddRecipeSerializer,
     IngredientSerializer, RecipeSerializer, TagSerializer)
@@ -23,3 +24,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.request.method in ['POST', 'PATCH']:
             return AddRecipeSerializer
         return RecipeSerializer
+
+    @action(detail=True, methods=['post', 'delete'])
+    def favorite(self, request, id):
+        ...
