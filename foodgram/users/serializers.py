@@ -1,15 +1,11 @@
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from django.core import exceptions as django_exceptions
-from django.db import IntegrityError, transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from djoser import utils
-from djoser.compat import get_user_email, get_user_email_field_name
-from djoser.conf import settings
 
 from .models import Follow
+from api.serializers import RecipeForFavorite
 
 User = get_user_model()
 
@@ -46,3 +42,39 @@ class MyUserSerializer(UserSerializer):
         if Follow.objects.filter(user=user, following=obj).exists():
             return True
         return False
+
+
+class SubscribeSerializer(MyUserSerializer):
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+
+    class Meta(MyUserSerializer.Meta):
+        fields = MyUserSerializer.Meta.fields + (
+            'recipes', 'recipes_count'
+        )
+        read_only_fields = ('email', 'username')
+
+    def validate(self, data):
+        user = self.context.get('request').user
+        following = self.instance
+        if Follow.objects.filter(user=user, following=following).exists():
+            raise ValidationError(
+                'Упс, вы уже подписаны на автора!'
+            )
+        if user == following:
+            raise ValidationError(
+                'Упс, нельзя подписаться на себя'
+            )
+        return data
+
+    def get_recipes_count(self, obj):
+        return obj.recipes.count()
+
+    def get_recipes(self, obj):
+        request = self.context.get('request')
+        limit = request.GET.get('recipes_limit')
+        recipes = obj.recipes.all()
+        if limit:
+            recipes = recipes[:int(limit)]
+        serializer = RecipeForFavorite(recipes, many=True, read_only=True)
+        return serializer.data

@@ -41,7 +41,7 @@ class Recipe(models.Model):
         User,
         verbose_name='Автор',
         on_delete=models.CASCADE,
-        related_name='recipe')
+        related_name='recipes')
 
 
 class RecipeIngredient(models.Model):
