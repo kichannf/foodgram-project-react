@@ -1,7 +1,7 @@
 from django.db.models import F
 from rest_framework import serializers
 
-from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
+from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag, Favorite, ShoppingCart
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -29,9 +29,17 @@ class RecipeSerializer(serializers.ModelSerializer):
     """Получение рептов."""
     tags = TagSerializer(many=True, read_only=True)
     ingredients = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
+        # fields = (
+        #     'id', 'tags', 'author',
+        #     'ingredients', 'is_favorited',
+        #     'is_in_shopping_cart', 'name',
+        #     'image', 'text', 'cooking_time'
+        # )
         fields = '__all__'
 
     def get_ingredients(self, obj):
@@ -44,13 +52,25 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
         return ingredients
 
+    def get_is_favorite(self, recipe):
+        user = self.context.get('request').user
+        return (
+            user.is_authenticated and
+            Favorite.objects.filter(user=user, recipe=recipe).exists()
+        )
+
+    def get_is_in_shopping_cart(self, recipe):
+        user = self.context.get('request').user
+        return (
+            user.is_authenticated and
+            ShoppingCart.objects.filter(user=user, recipe=recipe).exists()
+        )
+
 
 class AddIngredientToRecipeSerializer(serializers.ModelSerializer):
     id = serializers.SlugRelatedField(
         queryset=Ingredient.objects.all(), slug_field='id'
     )
-    # amount = serializers.IntegerField()
-    # id = serializers.IntegerField()
 
     class Meta:
         model = RecipeIngredient
@@ -68,17 +88,10 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        # print(validated_data)
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(**validated_data)
-        # print(recipe)
-        # print('*********', ingredients, '******', sep='\n')
         for ingredient in ingredients:
-            print('&&&&&&&&&', ingredient, '&&&&&&&&&', sep='\n')
-            # print('&&&&&&&&&', ingredient.get('id'), '&&&&&&&&&', sep='\n')
-            # print('&&&&&&&&&', ingredient.get('amount'), '&&&&&&&&&', sep='\n')
-            # print('&&&&&&&&&', recipe, '&&&&&&&&&', sep='\n')
             RecipeIngredient.objects.get_or_create(
                 recipe=recipe,
                 amount=ingredient['amount'],
@@ -109,7 +122,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             instance, context=context).data
 
 
-class RecipeForFavorite(serializers.ModelSerializer):
+class RecipeFavoriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe

@@ -60,7 +60,7 @@ class RecipeIngredient(models.Model):
 
 
 class Favorite(models.Model):
-    author = models.ForeignKey(
+    user = models.ForeignKey(
         User, verbose_name='Пользователь',
         related_name='favorite',
         on_delete=models.CASCADE)
@@ -71,28 +71,16 @@ class Favorite(models.Model):
     )
 
     def __str__(self):
-        return f'{self.recipe} у {self.author} в избранном'
+        return f'{self.recipe} у {self.user} в избранном'
 
 
-class Subscription(models.Model):
-    author = models.ForeignKey(
+class ShoppingCart(models.Model):
+    user = models.ForeignKey(
         User, verbose_name='Пользователь',
-        related_name='subscription',
-        on_delete=models.CASCADE)
-    recipe = models.ForeignKey(
-        Recipe, verbose_name='рецепты',
-        related_name='subscription',
-        on_delete=models.CASCADE
-    )
-
-
-class ShopingCart(models.Model):
-    author = models.ForeignKey(
-        User, verbose_name='Пользователь',
-        related_name='shoping_cart',
+        related_name='shopping_cart',
         on_delete=models.CASCADE)
     recipe = models.ForeignKey(
         Recipe, verbose_name='Корзина',
-        related_name='shoping_cart',
+        related_name='shopping_cart',
         on_delete=models.CASCADE
     )

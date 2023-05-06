@@ -5,7 +5,7 @@ from rest_framework.exceptions import ValidationError
 
 
 from .models import Follow
-from api.serializers import RecipeForFavorite
+from api.serializers import RecipeFavoriteSerializer
 
 User = get_user_model()
 
@@ -76,5 +76,6 @@ class SubscribeSerializer(MyUserSerializer):
         recipes = obj.recipes.all()
         if limit:
             recipes = recipes[:int(limit)]
-        serializer = RecipeForFavorite(recipes, many=True, read_only=True)
+        serializer = RecipeFavoriteSerializer(
+            recipes, many=True, read_only=True)
         return serializer.data
