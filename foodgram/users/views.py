@@ -5,8 +5,9 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import LimitOffsetPagination
 
-from .serializers import MyCreateUserSerializers, MyUserSerializer, SubscribeSerializer
+from .serializers import MyUserSerializer, SubscribeSerializer
 from .models import Follow
 
 
@@ -43,7 +44,13 @@ class MyUserViewSet(UserViewSet):
 
     @action(
         detail=False,
-        permission_classes=[IsAuthenticated]
+        permission_classes=[IsAuthenticated],
+        pagination_class=LimitOffsetPagination
     )
     def subscriptions(self, request):
-        ...
+        queryset = User.objects.filter(following__user=request.user)
+        pages = self.paginate_queryset(queryset)
+        serializer = SubscribeSerializer(
+            pages, many=True,
+            context={'request': request})
+        return self.get_paginated_response(serializer.data)
