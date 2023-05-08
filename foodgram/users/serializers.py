@@ -1,13 +1,21 @@
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreateSerializer, UserSerializer
+
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-
+from recipes.models import Recipe
 from .models import Follow
-from api.serializers import RecipeFavoriteSerializer
 
 User = get_user_model()
+
+
+class RecipeMiniSerializer(serializers.ModelSerializer):
+    """Короткий вывод рецепта."""
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class MyCreateUserSerializers(UserCreateSerializer):
@@ -76,6 +84,6 @@ class SubscribeSerializer(MyUserSerializer):
         recipes = obj.recipes.all()
         if limit:
             recipes = recipes[:int(limit)]
-        serializer = RecipeFavoriteSerializer(
+        serializer = RecipeMiniSerializer(
             recipes, many=True, read_only=True)
         return serializer.data

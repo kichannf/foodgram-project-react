@@ -1,4 +1,5 @@
 from django.db import models
+
 from users.models import User
 
 
@@ -31,9 +32,11 @@ class Recipe(models.Model):
         verbose_name='Теги',
         related_name='recipe'
     )
-    # image = models.ImageField(
-    #     upload_to='recipes/images/',
-    #     )
+    image = models.ImageField(
+        upload_to='recipes/images/',
+        blank=True,
+        verbose_name='Картинка'
+        )
     name = models.CharField('Название', max_length=200)
     text = models.TextField('Описание')
     cooking_time = models.IntegerField('Время приготовления')
@@ -42,6 +45,12 @@ class Recipe(models.Model):
         verbose_name='Автор',
         on_delete=models.CASCADE,
         related_name='recipes')
+    pub_date = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата')
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class RecipeIngredient(models.Model):
@@ -84,3 +93,6 @@ class ShoppingCart(models.Model):
         related_name='shopping_cart',
         on_delete=models.CASCADE
     )
+
+    def __str__(self):
+        return f'{self.recipe} у {self.user} в списке покупок'

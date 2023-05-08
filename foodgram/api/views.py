@@ -1,20 +1,21 @@
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from django.db.models import Sum
-from django.contrib.auth import get_user_model
+from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-from recipes.models import Favorite, Ingredient, Recipe, Tag, ShoppingCart, RecipeIngredient
-from .serializers import (
-    AddRecipeSerializer, RecipeFavoriteSerializer,
-    IngredientSerializer, RecipeSerializer, TagSerializer)
+from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingCart, Tag)
+from .filters import IngredientFilter, RecipeFilter
+from .serializers import (AddRecipeSerializer, IngredientSerializer,
+                          RecipeFavoriteSerializer, RecipeSerializer,
+                          TagSerializer)
 
-User = get_user_model()
+
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
@@ -23,10 +24,15 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = IngredientFilter
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = RecipeFilter
+    ordering_fields = ['-pub_date']
 
     def get_serializer_class(self):
         if self.request.method in ['POST', 'PATCH']:
@@ -73,8 +79,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated]
     )
     def download_shopping_cart(self, request):
-        # user = request.user
-        user = User.objects.get(id=1)
+        user = request.user
         if not user.shopping_cart.exists():
             return Response(status=status.HTTP_404_NOT_FOUND)
         ingredients = RecipeIngredient.objects.filter(
