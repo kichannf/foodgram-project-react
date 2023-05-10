@@ -34,7 +34,7 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = '__all__'
+        fields = ('id', 'name', 'color', 'slug')
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -67,17 +67,18 @@ class RecipeSerializer(serializers.ModelSerializer):
         return ingredients
 
     def get_is_favorited(self, recipe):
-        user = self.context.get('request').user
+        request = self.context.get('request')
         return (
-            user.is_authenticated and
-            Favorite.objects.filter(user=user, recipe=recipe).exists()
+            request.user.is_authenticated and
+            Favorite.objects.filter(user=request.user, recipe=recipe).exists()
         )
 
     def get_is_in_shopping_cart(self, recipe):
-        user = self.context.get('request').user
+        request = self.context.get('request')
         return (
-            user.is_authenticated and
-            ShoppingCart.objects.filter(user=user, recipe=recipe).exists()
+            request.user.is_authenticated and
+            ShoppingCart.objects.filter(user=request.user, recipe=recipe
+                                        ).exists()
         )
 
 
@@ -104,7 +105,10 @@ class AddRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = '__all__'
+        fields = (
+            'ingredients', 'tags', 'image',
+            'name', 'text', 'cooking_time', 'author'
+        )
 
     def create(self, validated_data):
         author = self.context['request'].user
@@ -126,6 +130,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             raise ValidationError('Изменить рецепт может только автор!')
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
+        RecipeIngredient.objects.filter(recipe=instance).delete()
         recipe = super().update(instance, validated_data)
         recipe.tags.clear()
         recipe.ingredients.clear()

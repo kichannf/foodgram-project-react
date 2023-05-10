@@ -14,11 +14,13 @@ from .filters import IngredientFilter, RecipeFilter
 from .serializers import (AddRecipeSerializer, IngredientSerializer,
                           RecipeFavoriteSerializer, RecipeSerializer,
                           TagSerializer)
+from .paginations import LimitPaginations
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
+    pagination_class = None
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
@@ -26,6 +28,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IngredientFilter
+    pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -33,6 +36,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     ordering_fields = ['-pub_date']
+    pagination_class = LimitPaginations
 
     def get_serializer_class(self):
         if self.request.method in ['POST', 'PATCH']:

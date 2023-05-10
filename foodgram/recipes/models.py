@@ -8,6 +8,9 @@ class Tag(models.Model):
     color = models.CharField('Цвет', max_length=7, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
 
+    class Meta:
+        ordering = ('name', )
+
     def __str__(self):
         return f'{self.name}'
 
@@ -15,6 +18,9 @@ class Tag(models.Model):
 class Ingredient(models.Model):
     name = models.CharField('Название', max_length=200)
     measurement_unit = models.CharField('Единица измерения', max_length=200)
+
+    class Meta:
+        ordering = ('name', )
 
     def __str__(self):
         return f'{self.name}'
@@ -49,6 +55,9 @@ class Recipe(models.Model):
         auto_now_add=True,
         verbose_name='Дата')
 
+    class Meta:
+        ordering = ('-pub_date', )
+
     def __str__(self):
         return f'{self.name}'
 
@@ -63,6 +72,9 @@ class RecipeIngredient(models.Model):
         related_name='recipe_ingredient',
         verbose_name='Ингредиент')
     amount = models.IntegerField('Количество')
+
+    class Meta:
+        ordering = ('ingredient__name', )
 
     def __str__(self):
         return f'{self.recipe}{self.ingredient}'
@@ -79,6 +91,9 @@ class Favorite(models.Model):
         on_delete=models.CASCADE
     )
 
+    class Meta:
+        ordering = ('user', )
+
     def __str__(self):
         return f'{self.recipe} у {self.user} в избранном'
 
@@ -93,6 +108,9 @@ class ShoppingCart(models.Model):
         related_name='shopping_cart',
         on_delete=models.CASCADE
     )
+
+    class Meta:
+        ordering = ('user', )
 
     def __str__(self):
         return f'{self.recipe} у {self.user} в списке покупок'

@@ -10,6 +10,7 @@ from rest_framework.response import Response
 
 from .models import Follow
 from .serializers import MyUserSerializer, SubscribeSerializer
+from api.paginations import LimitPaginations
 
 User = get_user_model()
 
@@ -17,6 +18,7 @@ User = get_user_model()
 class MyUserViewSet(UserViewSet):
     queryset = User.objects.all()
     serializer_class = MyUserSerializer
+    pagination_class = LimitPaginations
 
     @action(
         detail=True,
