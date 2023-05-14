@@ -35,11 +35,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
-    ordering_fields = ['-pub_date']
+    ordering_fields = ('-pub_date', )
     pagination_class = LimitPaginations
 
     def get_serializer_class(self):
-        if self.request.method in ['POST', 'PATCH']:
+        if self.request.method in ('POST', 'PATCH'):
             return AddRecipeSerializer
         return RecipeSerializer
 
@@ -61,7 +61,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                         status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True,
-            methods=['post', 'delete'],
+            methods=('post', 'delete'),
             permission_classes=[IsAuthenticated])
     def favorite(self, request, pk):
         user = request.user
@@ -70,7 +70,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return self.delete_favorite_or_cart(Favorite, user, pk)
 
     @action(detail=True,
-            methods=['post', 'delete'],
+            methods=('post', 'delete'),
             permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk):
         user = request.user

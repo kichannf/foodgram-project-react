@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 from users.models import User
 
@@ -45,7 +46,12 @@ class Recipe(models.Model):
         )
     name = models.CharField('Название', max_length=200)
     text = models.TextField('Описание')
-    cooking_time = models.IntegerField('Время приготовления')
+    cooking_time = models.PositiveSmallIntegerField(
+        'Время приготовления',
+        validators=(
+            MinValueValidator(
+                1, message='Время приготовление должно быть больше 0'),),
+        )
     author = models.ForeignKey(
         User,
         verbose_name='Автор',
@@ -71,7 +77,12 @@ class RecipeIngredient(models.Model):
         Ingredient, on_delete=models.CASCADE,
         related_name='recipe_ingredient',
         verbose_name='Ингредиент')
-    amount = models.IntegerField('Количество')
+    amount = models.PositiveSmallIntegerField(
+        'Количество',
+        validators=(
+            MinValueValidator(
+                1, message='Количество ингредиентов должно быть больше 0'),),
+        )
 
     class Meta:
         ordering = ('ingredient__name', )
@@ -93,6 +104,12 @@ class Favorite(models.Model):
 
     class Meta:
         ordering = ('user', )
+        constraints = (
+            models.UniqueConstraint(
+                fields=('user', 'recipe'),
+                name='unique_favorite'
+            ),
+        )
 
     def __str__(self):
         return f'{self.recipe} у {self.user} в избранном'
