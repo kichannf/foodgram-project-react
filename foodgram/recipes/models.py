@@ -43,7 +43,7 @@ class Recipe(models.Model):
         upload_to='recipes/images/',
         blank=True,
         verbose_name='Картинка'
-        )
+    )
     name = models.CharField('Название', max_length=200)
     text = models.TextField('Описание')
     cooking_time = models.PositiveSmallIntegerField(
@@ -51,7 +51,7 @@ class Recipe(models.Model):
         validators=(
             MinValueValidator(
                 1, message='Время приготовление должно быть больше 0'),),
-        )
+    )
     author = models.ForeignKey(
         User,
         verbose_name='Автор',
@@ -82,7 +82,7 @@ class RecipeIngredient(models.Model):
         validators=(
             MinValueValidator(
                 1, message='Количество ингредиентов должно быть больше 0'),),
-        )
+    )
 
     class Meta:
         ordering = ('ingredient__name', )
