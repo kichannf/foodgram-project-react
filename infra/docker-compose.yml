@@ -28,7 +28,6 @@ services:
   
   nginx:
     image: nginx:1.19.3
-    restart: always
     ports:
       - "80:80"
     volumes:
@@ -39,6 +38,7 @@ services:
       - media_value:/var/html/media/
     depends_on:
       - web
+    restart: always
 
 volumes:
   static_value:
