@@ -37,7 +37,7 @@ class IngredientAdmin(ImportExportModelAdmin):
 class TagResourse(resources.ModelResource):
 
     class Meta:
-        model = Ingredient
+        model = Tag
         fields = (
             'name', 'color', 'slug'
         )
@@ -47,7 +47,7 @@ class TagResourse(resources.ModelResource):
 
 
 class TagAdmin(ImportExportModelAdmin):
-    resource_class = IngredientResourse
+    resource_class = TagResourse
     list_display = ('name', 'color', 'slug')
     list_filter = ('name', )
 
