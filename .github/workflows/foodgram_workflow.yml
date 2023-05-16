@@ -69,7 +69,7 @@ jobs:
             sudo docker-compose down
             sudo docker rmi kichannf/foodgram-foodgram:latest
             sudo docker rmi kichannf/foodgram-frontend:latest
-            sudo rm -f .env       
+            sudo rm .env       
             sudo touch .env
             sudo echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             sudo echo DB_NAME=${{ secrets.DB_NAME }} >> .env
