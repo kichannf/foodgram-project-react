@@ -34,9 +34,27 @@ class IngredientAdmin(ImportExportModelAdmin):
     list_filter = ('name', )
 
 
+class TagResourse(resources.ModelResource):
+
+    class Meta:
+        model = Ingredient
+        fields = (
+            'name', 'color', 'slug'
+        )
+        import_id_fields = (
+            'name', 'color', 'slug'
+        )
+
+
+class TagAdmin(ImportExportModelAdmin):
+    resource_class = IngredientResourse
+    list_display = ('name', 'color', 'slug')
+    list_filter = ('name', )
+
+
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(RecipeIngredient)
-admin.site.register(Tag)
+admin.site.register(Tag, TagAdmin)
 admin.site.register(Favorite)
 admin.site.register(ShoppingCart)
