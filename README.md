@@ -6,7 +6,7 @@
 http://51.250.29.50/recipes
 ```
 
-## Логин пароль администратора
+## Логин пароль администратора для проверки админки
 
 ```
 admin   #Логин
@@ -40,13 +40,13 @@ sudo apt install docker.io            # Docker
 sudo apt install docker-compose       # Docker-Compose
 ```
 
-3. Находясь в папке infra, копировать на сервер файлы docker-compose.yml, nginx.conf:
+3. Находясь в папке infra, копировать на сервер файлы docker-compose.yml и nginx.conf:
 ```
 scp docker-compose.yml nginx.conf username@IP:/home/username/   # username - имя пользователя на сервере
                                                                 # IP - публичный ip-адрес сервера
 ```
 
-* : При автоматизации через GitHub Actions, в репозитории в разделе Secrets > Actions создать переменные окружения:
+* При автоматизации через GitHub Actions, в репозитории в разделе Secrets > Actions создать переменные окружения:
 ```
 SECRET_KEY              # секретный ключ Django проекта
 DOCKER_PASSWORD         # пароль от Docker Hub
@@ -63,7 +63,6 @@ POSTGRES_PASSWORD       # Придумать свой
 DB_HOST                 # db
 DB_PORT                 # 5432 (порт по умолчанию)
 ```
-. В корневой директории создать файл .env, согласно примеру:
 
 4. Запустить контейнеры на сервере:
 ```
