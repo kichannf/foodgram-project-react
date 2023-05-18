@@ -46,9 +46,10 @@ class MyUserSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        return (request.user.is_authenticated and Follow.objects.filter(
-            user=request.user, following=obj).exists()
-        )
+        return (request and request.user.is_authenticated
+                and Follow.objects.filter(
+                    user=request.user, following=obj).exists()
+                )
 
 
 class SubscribeSerializer(MyUserSerializer):
