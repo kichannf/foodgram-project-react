@@ -173,6 +173,11 @@ DJOSER = {
         'user': 'users.serializers.MyUserSerializer',
         'current_user': 'users.serializers.MyUserSerializer',
     },
+    'PERMISSIONS': {
+        'user_list': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
+        'user': ['rest_framework.permissions.IsAuthenticated'],
+    },
+    'HIDE_USERS': False,
 }
 
 INTERNAL_IPS = ['127.0.0.1', ]
