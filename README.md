@@ -34,7 +34,7 @@ http://51.250.29.50/api/docs/
 git@github.com:kichannf/foodgram-project-react.git
 ```
 
-2. Установить на сервере Docker, Docker Compose:
+2. Установить на сервере Docker и Docker Compose:
 ```
 sudo apt install docker.io            # Docker
 sudo apt install docker-compose       # Docker-Compose
