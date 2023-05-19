@@ -46,7 +46,7 @@ class TagAdmin(ImportExportModelAdmin):
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('name', 'author', 'count_favorite')
     list_filter = ('name', 'author', 'tags')
-    inlines = IngredientAdmin
+    inlines = [IngredientAdmin]
 
     @display(description='Кол-во в избранном')
     def count_favorite(self, recipe):
