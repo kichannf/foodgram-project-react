@@ -8,7 +8,7 @@ from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
 
 
 class RecipeIngredientAdmin(admin.TabularInline):
-    model = Ingredient
+    model = RecipeIngredient
     min_num = 1
 
 
