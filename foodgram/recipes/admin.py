@@ -7,15 +7,6 @@ from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                      ShoppingCart, Tag)
 
 
-class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'author', 'count_favorite')
-    list_filter = ('name', 'author', 'tags')
-
-    @display(description='Кол-во в избранном')
-    def count_favorite(self, recipe):
-        return recipe.favorite.count()
-
-
 class IngredientResourse(resources.ModelResource):
 
     class Meta:
@@ -50,6 +41,16 @@ class TagAdmin(ImportExportModelAdmin):
     resource_class = TagResourse
     list_display = ('name', 'color', 'slug')
     list_filter = ('name', )
+
+
+class RecipeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'author', 'count_favorite')
+    list_filter = ('name', 'author', 'tags')
+    inlines = IngredientAdmin
+
+    @display(description='Кол-во в избранном')
+    def count_favorite(self, recipe):
+        return recipe.favorite.count()
 
 
 admin.site.register(Ingredient, IngredientAdmin)

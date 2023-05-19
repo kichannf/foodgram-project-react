@@ -14,6 +14,8 @@ class User(AbstractUser):
     )
 
     class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
         ordering = ('id',)
 
     def __str__(self):
@@ -35,6 +37,7 @@ class Follow(models.Model):
     )
 
     class Meta:
+        verbose_name = 'Подписки'
         constraints = (
             models.UniqueConstraint(
                 fields=('user', 'following',),
