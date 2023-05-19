@@ -7,19 +7,16 @@ from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                      ShoppingCart, Tag)
 
 
-class IngredientInRecipe(admin.TabularInline):
+class RecipeIngredientAdmin(admin.TabularInline):
     model = Ingredient
-
-
-class TagInRecipe(admin.TabularInline):
-    model = Tag
+    min_num = 1
 
 
 class RecipeAdmin(admin.ModelAdmin):
 
     list_display = ('name', 'author', 'count_favorite')
     list_filter = ('name', 'author', 'tags')
-    inlines = [IngredientInRecipe, TagInRecipe]
+    inlines = [RecipeIngredientAdmin]
 
     @display(description='Кол-во в избранном')
     def count_favorite(self, recipe):
