@@ -38,6 +38,7 @@ class Follow(models.Model):
 
     class Meta:
         verbose_name = 'Подписки'
+        verbose_name_plural = 'Подписчики'
         constraints = (
             models.UniqueConstraint(
                 fields=('user', 'following',),
